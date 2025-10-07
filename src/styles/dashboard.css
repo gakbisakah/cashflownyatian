@@ -1,0 +1,495 @@
+/* Import font modern */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ================================================
+  GLOBAL STYLES
+  ================================================ */
+
+* {
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box; /* Pastikan box model konsisten */
+}
+
+/* Kelas untuk padding konten internal */
+.container-content-padding {
+    padding-left: 40px;  /* Default padding untuk desktop */
+    padding-right: 40px; /* Default padding untuk desktop */
+    max-width: 100%; /* Pastikan tidak ada batasan lebar */
+    margin-left: auto;
+    margin-right: auto;
+    /* Optional: Jika ingin batasi lebar konten utama di tengah layar lebar */
+    /* max-width: 1400px; */ 
+}
+
+
+/* ================================================
+  DASHBOARD PAGE - MODERN WHITE DESIGN
+  ================================================ */
+
+.transaction-page {
+  min-height: 100vh;
+  background: #ffffff;
+  position: relative;
+  padding-bottom: 50px;
+}
+
+.transaction-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.transaction-wrapper {
+  position: relative;
+  z-index: 1;
+  padding: 2rem 0 4rem 0; /* Padding vertikal untuk wrapper utama */
+  /* Tidak perlu padding horizontal di sini, karena sudah di handle di .container-content-padding */
+}
+
+/* ================================================
+  HERO SECTION (Judul)
+  ================================================ */
+
+.transaction-hero {
+  padding: 1.5rem 0 2rem 0;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.transaction-hero-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.transaction-hero-subtitle {
+  font-size: 1rem;
+  color: #64748b;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* ================================================
+  ADD TRANSACTION BUTTON (Contoh Styling)
+  ================================================ */
+
+.btn-add-transaction {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+  white-space: nowrap;
+}
+
+.btn-add-transaction:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+  color: #ffffff;
+}
+
+
+/* ================================================
+  SUMMARY METRICS (Card Statistik)
+  ================================================ */
+
+.summary-metric {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 0.6s ease-out backwards;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); 
+}
+
+.summary-metric::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px; /* Dibuat sedikit tebal */
+  opacity: 1; /* Selalu tampil, tidak hover */
+  transition: opacity 0.3s;
+}
+
+.summary-metric:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); 
+  transform: translateY(-3px);
+}
+
+.summary-metric:nth-child(1) { animation-delay: 0.2s; }
+.summary-metric:nth-child(2) { animation-delay: 0.3s; }
+.summary-metric:nth-child(3) { animation-delay: 0.4s; }
+
+.summary-metric-success::before {
+  background: #10b981;
+}
+
+.summary-metric-danger::before {
+  background: #ef4444;
+}
+
+.summary-metric-primary::before {
+  background: #6366f1;
+}
+
+.summary-metric-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+  transition: transform 0.3s;
+}
+
+.summary-metric:hover .summary-metric-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.summary-metric-success .summary-metric-icon {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.summary-metric-danger .summary-metric-icon {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.summary-metric-primary .summary-metric-icon {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.summary-metric-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.summary-metric-label {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.summary-metric-value {
+  font-size: 1.75rem; /* Dibuat lebih besar */
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+/* ================================================
+  FILTER CARD
+  ================================================ */
+
+.filter-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); 
+  animation: fadeInUp 0.6s ease-out 0.1s backwards;
+}
+
+.filter-card-header {
+  background: #f8f9fa; /* Lebih sederhana */
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.filter-card-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.filter-card-body {
+  padding: 1.5rem;
+}
+
+.filter-label {
+  font-size: 0.75rem; /* Dibuat lebih kecil */
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.filter-input {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 0.625rem 0.875rem !important;
+  font-size: 0.875rem !important;
+  color: #334155 !important;
+  transition: all 0.2s;
+  box-shadow: none !important;
+}
+
+.filter-input:hover {
+  border-color: #cbd5e1 !important;
+}
+
+.filter-input:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+  outline: none;
+}
+
+.btn-reset-filter {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-reset-filter:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+
+/* ================================================
+  TRANSACTION LIST & GRID
+  ================================================ */
+
+.transaction-list-section {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  animation: fadeInUp 0.6s ease-out 0.5s backwards;
+}
+
+.transaction-list-header {
+  background: #f8f9fa;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.transaction-list-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.transaction-count-badge {
+  background: #ede9fe;
+  color: #7c3aed;
+  padding: 0.375rem 0.875rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.transaction-grid-scrollable {
+  position: relative;
+  overflow: hidden;
+  max-height: 700px; /* Batasan tinggi untuk daftar transaksi */
+  min-height: 200px;
+}
+
+.transaction-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+  padding: 1.5rem;
+  overflow-y: auto; /* Aktifkan scroll */
+  overflow-x: hidden;
+}
+
+/* CashFlowCard Styling (Pastikan komponen CashFlowCard Anda menggunakan kelas ini) */
+.cash-flow-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: all 0.3s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.cash-flow-card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+/* ================================================
+  EMPTY & LOADING STATES
+  ================================================ */
+
+.empty-state, .loading-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #64748b;
+  grid-column: 1 / -1; /* Penuh lebar grid */
+}
+
+.empty-state {
+  border: 1px dashed #e2e8f0; 
+  background: #f8fafc; 
+  border-radius: 12px;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  color: #94a3b8;
+  margin-bottom: 1rem;
+}
+
+.empty-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+
+/* ================================================
+  RESPONSIVENESS (Mobile First)
+  ================================================ */
+
+@media (max-width: 992px) { /* Medium devices (Tablet) */
+    .container-content-padding {
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+}
+
+@media (max-width: 768px) { /* Small devices (Mobile) */
+  .container-content-padding {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  .transaction-hero-title {
+    font-size: 1.8rem;
+  }
+  
+  .summary-metric {
+    padding: 1rem;
+  }
+  
+  .summary-metric-value {
+    font-size: 1.5rem; 
+  }
+
+  .summary-metric-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+    border-radius: 10px;
+  }
+
+  .filter-card-body {
+    padding: 1rem;
+  }
+  
+  /* Filter responsif di mobile */
+  .filter-label {
+    margin-bottom: 0.25rem;
+  }
+  
+  .filter-input {
+    padding: 0.4rem 0.6rem !important; /* Perkecil padding input */
+    font-size: 0.8rem !important;
+  }
+  
+  .col-12.col-md-2.d-flex.align-items-end.gap-2 {
+      /* Pindahkan ke baris baru dan berikan margin atas */
+      margin-top: 0.5rem;
+  }
+  
+  .transaction-grid {
+    padding: 1rem;
+    gap: 1rem;
+    /* Di mobile, paksa 1 kolom penuh */
+    grid-template-columns: 1fr; 
+  }
+}
+
+/* ================================================
+  ANIMATIONS (Dipertahankan)
+  ================================================ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,5 @@
+# =========================
+# Node & Bun dependencies
+# =========================
+node_modules/
+bun.lockb

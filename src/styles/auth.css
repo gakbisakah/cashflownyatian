@@ -1,0 +1,207 @@
+/* frontend/src/styles/auth.css */
+
+/* ======================================= */
+/* 0. ROOT VARIABLES (Definisi Ulang untuk kejelasan) */
+/* ======================================= */
+:root {
+    --primary-color: #4A7DFF; /* Biru cerah */
+    --primary-dark: #3a63cc;
+    --text-color: #1e293b; 
+    --muted-text: #64748b; 
+    --background-color: #e6ecf2; /* Warna background LEBIH GELAP untuk menonjolkan putih card */
+    --card-bg: #ffffff;
+    --border-color: #dbe4ee; /* Border yang lebih kontras */
+    --image-bg: #f8faff; /* Background sisi kiri yang lebih halus */
+}
+
+/* ======================================= */
+/* 1. MAIN CONTAINER & CARD WRAPPER */
+/* ======================================= */
+.auth-container-centered {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: var(--background-color);
+}
+
+/* Kartu Utama yang membungkus Split-Screen */
+.auth-split-card {
+    background: var(--card-bg);
+    border-radius: 16px; 
+    /* Shadow DITINGKATKAN agar card sangat menonjol */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); 
+    max-width: 900px; 
+    width: 100%;
+    overflow: hidden; 
+    display: flex; 
+    border: 1px solid var(--border-color); /* Tambah border halus */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-split-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+}
+
+/* ======================================= */
+/* 2. SPLIT LAYOUT (Di dalam Card) */
+/* ======================================= */
+
+/* Sisi Kiri: Ilustrasi */
+.auth-split-card-left {
+    flex: 1; 
+    background-color: var(--image-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    position: relative;
+    text-align: center;
+    border-right: 1px solid var(--border-color); 
+}
+
+.auth-split-card-left h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-top: 15px;
+}
+
+.auth-split-card-left p {
+    font-size: 0.9rem;
+    color: var(--muted-text);
+    margin-bottom: 20px;
+}
+
+/* Sisi Kanan: Form */
+.auth-split-card-right {
+    flex: 1; 
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* ======================================= */
+/* 3. FORM STYLES & COMPONENTS */
+/* ======================================= */
+.auth-header-form {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-header-form h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 5px;
+}
+
+.form-label-modern {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 5px;
+    display: block;
+}
+
+.input-group-modern {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+}
+
+.input-group-modern:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.input-group-modern .input-group-text {
+    background-color: transparent;
+    border: none;
+    color: var(--muted-text);
+    padding: 0.75rem 0.5rem;
+}
+
+.form-control-modern {
+    border: none !important;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+}
+
+.form-control-modern:focus {
+    box-shadow: none;
+}
+
+.btn-primary-modern {
+    background: var(--primary-color);
+    border: none;
+    padding: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 10px rgba(74, 125, 255, 0.3);
+    color: white;
+}
+
+.btn-primary-modern:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(74, 125, 255, 0.4);
+}
+
+.btn-primary-modern:disabled {
+    background-color: #aeb5e0 !important;
+    box-shadow: none;
+    transform: none;
+}
+
+.link-modern {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.link-modern:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+.alert-modern {
+    border-radius: 8px;
+    font-size: 0.9rem;
+    padding: 12px 20px;
+}
+
+/* Utilities */
+.text-primary-color { color: var(--primary-color) !important; }
+.text-muted-modern { color: var(--muted-text) !important; }
+
+
+/* ======================================= */
+/* 4. RESPONSIVENESS (MOBILE) */
+/* ======================================= */
+@media (max-width: 768px) { 
+    .auth-split-card {
+        max-width: 100%;
+        min-height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+        flex-direction: column; 
+        border: none; /* Hilangkan border di mobile */
+    }
+    
+    .auth-split-card-left {
+        display: none; 
+    }
+
+    .auth-split-card-right {
+        padding: 40px 20px;
+        flex: none; 
+        width: 100%;
+    }
+}

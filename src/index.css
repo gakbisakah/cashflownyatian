@@ -1,0 +1,71 @@
+/* ======================================= */
+/* 1. Import Bootstrap & Icons DARI NODE_MODULES */
+/* ======================================= */
+/* Asumsi path ini adalah yang benar setelah instalasi npm/yarn */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+/* ======================================= */
+/* 2. Custom Properties (Variables) */
+/* ======================================= */
+:root {
+  /* Warna Primer */
+  --primary-color: #4a7dff; /* Biru yang fresh dan modern */
+  --primary-dark: #0056b3;
+  --primary-gradient: linear-gradient(135deg, #4a7dff 0%, #1a56c4 100%);
+  
+  /* Warna Netral */
+  --background-color: #f7f9fc; /* Latar belakang yang sangat terang */
+  --card-bg: #ffffff;
+  --text-color: #333333;
+  --muted-text: #6c757d;
+  --border-color: #e0e6ed;
+}
+
+/* ======================================= */
+/* 3. Reset & Typography */
+/* ======================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color); 
+  color: var(--text-color);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Override Bootstrap Primary Color */
+.text-primary { color: var(--primary-color) !important; }
+
+/* ======================================= */
+/* 4. Scrollbar Styling */
+/* ======================================= */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a9acb0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-text);
+}
