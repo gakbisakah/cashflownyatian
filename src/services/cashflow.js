@@ -3,49 +3,40 @@ import { apiClient } from "./auth";
 export const cashflowService = {
   // ===================== GET ALL =====================
   getAll: async (filters = {}) => {
-  try {
-    const {
-      type,
-      source,
-      label,
-      start_date,
-      end_date,
-    } = filters;
+    try {
+      const { type, source, label, start_date, end_date } = filters;
+      const params = {};
+      if (type) params.type = type;
+      if (source) params.source = source;
+      if (label) params.label = label;
+      if (start_date) params.start_date = start_date;
+      if (end_date) params.end_date = end_date;
 
-    const params = {};
-    if (type) params.type = type;
-    if (source) params.source = source;
-    if (label) params.label = label;
-    if (start_date) params.start_date = start_date;
-    if (end_date) params.end_date = end_date;
+      const res = await apiClient.get("/cash-flows", { params });
+      const result = res.data?.data || {};
+      return {
+        success: true,
+        data: result.cash_flows || [],
+        stats: result.stats || {},
+      };
+    } catch (err) {
+      console.error("❌ getAll error:", err.response?.data || err.message);
+      return { success: false, data: [], stats: {} };
+    }
+  },
 
-    const res = await apiClient.get("/cash-flows", { params });
-    const result = res.data?.data || {};
+  
 
-    return {
-      success: true,
-      data: result.cash_flows || [],
-      stats: result.stats || {},
-    };
-  } catch (err) {
-    console.error("❌ getAll error:", err.response?.data || err.message);
-    return { success: false, data: [], stats: {} };
-  }
-},
-
-
-// ===================== GET BY ID =====================
-getById: async (id) => {
-  try {
-    const res = await apiClient.get(`/cash-flows/${id}`);
-    return { success: true, data: res.data?.data || {} };
-  } catch (err) {
-    console.error("❌ getById error:", err.response?.data || err.message);
-    return { success: false, data: {} };
-  }
-},
-
-
+  // ===================== GET BY ID =====================
+  getById: async (id) => {
+    try {
+      const res = await apiClient.get(`/cash-flows/${id}`);
+      return { success: true, data: res.data?.data || {} };
+    } catch (err) {
+      console.error("❌ getById error:", err.response?.data || err.message);
+      return { success: false, data: {} };
+    }
+  },
 
   // ===================== CREATE =====================
   create: async (data) => {
@@ -92,6 +83,8 @@ getById: async (id) => {
     }
   },
 
+  
+
   // ===================== GET LABELS =====================
   getLabels: async () => {
     try {
@@ -102,80 +95,126 @@ getById: async (id) => {
       return { success: false, data: [] };
     }
   },
-// ===================== GET DAILY STATS (Auto Tanggal Hari Ini) =====================
-getDailyStats: async () => {
+
+  // ===================== GET DAILY STATS =====================
+  getDailyStats: async ({ end_date, total_data } = {}) => {
+    try {
+      // Gunakan tanggal hari ini jika tidak ada end_date
+      const today = end_date || new Date().toISOString().split("T")[0] + " 23:59:59";
+      const total = total_data || 7;
+
+      const res = await apiClient.get("/cash-flows/stats/daily", {
+        params: { 
+          end_date: today, 
+          total_data: total 
+        },
+      });
+
+      const result = res.data?.data || {};
+      const inflow = result.stats_inflow || {};
+      const outflow = result.stats_outflow || {};
+      const cashflow = result.stats_cashflow || {};
+
+      // Gabungkan semua data berdasarkan tanggal
+      const allDates = new Set([
+        ...Object.keys(inflow),
+        ...Object.keys(outflow),
+        ...Object.keys(cashflow)
+      ]);
+
+      const dailyData = Array.from(allDates).map((dateKey) => {
+        const inflowVal = inflow[dateKey] || 0;
+        const outflowVal = outflow[dateKey] || 0;
+        
+        return {
+          date: dateKey, // format: DD-MM-YYYY dari backend
+          total_inflow: inflowVal,
+          total_outflow: outflowVal,
+          total_cashflow: cashflow[dateKey] || 0,
+          total_transactions: (inflowVal > 0 ? 1 : 0) + (outflowVal > 0 ? 1 : 0), // estimasi
+        };
+      });
+
+      // Sort by date (oldest to newest)
+      dailyData.sort((a, b) => {
+        const [dA, mA, yA] = a.date.split("-").map(Number);
+        const [dB, mB, yB] = b.date.split("-").map(Number);
+        const dateA = new Date(yA, mA - 1, dA);
+        const dateB = new Date(yB, mB - 1, dB);
+        return dateA - dateB;
+      });
+
+      return { success: true, data: dailyData };
+    } catch (err) {
+      console.error("❌ getDailyStats error:", err.response?.data || err.message);
+      return { success: false, data: [] };
+    }
+  },
+
+  // ===================== GET MONTHLY STATS =====================
+  getMonthlyStats: async ({ end_date, total_data } = {}) => {
+    try {
+      // Gunakan tanggal hari ini jika tidak ada end_date
+      const today = end_date || new Date().toISOString().split("T")[0] + " 23:59:59";
+      const total = total_data || 6;
+
+      const res = await apiClient.get("/cash-flows/stats/monthly", {
+        params: { 
+          end_date: today, 
+          total_data: total 
+        },
+      });
+
+      const result = res.data?.data || {};
+      const inflow = result.stats_inflow || {};
+      const outflow = result.stats_outflow || {};
+      const cashflow = result.stats_cashflow || {};
+
+      // Gabungkan semua data berdasarkan bulan
+      const allMonths = new Set([
+        ...Object.keys(inflow),
+        ...Object.keys(outflow),
+        ...Object.keys(cashflow)
+      ]);
+
+      const monthlyData = Array.from(allMonths).map((monthKey) => {
+        const inflowVal = inflow[monthKey] || 0;
+        const outflowVal = outflow[monthKey] || 0;
+        
+        return {
+          month: monthKey, // format: MM-YYYY dari backend
+          total_inflow: inflowVal,
+          total_outflow: outflowVal,
+          total_cashflow: cashflow[monthKey] || 0,
+          total_transactions: (inflowVal > 0 ? 1 : 0) + (outflowVal > 0 ? 1 : 0), // estimasi
+        };
+      });
+
+      // Sort by month (oldest to newest)
+      monthlyData.sort((a, b) => {
+        const [mA, yA] = a.month.split("-").map(Number);
+        const [mB, yB] = b.month.split("-").map(Number);
+        const dateA = new Date(yA, mA - 1);
+        const dateB = new Date(yB, mB - 1);
+        return dateA - dateB;
+      });
+
+      return { success: true, data: monthlyData };
+    } catch (err) {
+      console.error("❌ getMonthlyStats error:", err.response?.data || err.message);
+      return { success: false, data: [] };
+    }
+  },
+
+
+ getDetail: async (id) => {
   try {
-    const today = new Date();
-    const endDate = today.toISOString().split("T")[0] + " 23:59:59";
-
-    const res = await apiClient.get("/cash-flows/stats/daily", {
-      params: { end_date: endDate, total_data: 40 },
-    });
-
-    const result = res.data?.data || {};
-    const inflow = result.stats_inflow || {};
-    const outflow = result.stats_outflow || {};
-    const cashflow = result.stats_cashflow || {};
-
-    const dailyData = Object.keys(inflow).map((key) => ({
-      date: key,
-      total_inflow: inflow[key] || 0,
-      total_outflow: outflow[key] || 0,
-      total_cashflow: cashflow[key] || 0,
-    }));
-
-    // Urutkan berdasarkan tanggal agar tampil rapi
-    dailyData.sort((a, b) => {
-      const [dA, mA, yA] = a.date.split("-").map(Number);
-      const [dB, mB, yB] = b.date.split("-").map(Number);
-      return new Date(yA, mA - 1, dA) - new Date(yB, mB - 1, dB);
-    });
-
-    console.log("📈 Daily Stats (auto today):", dailyData);
-    return { success: true, data: dailyData };
+    const res = await apiClient.get(`/cash-flows/${id}`);
+    return { success: true, data: res.data?.data || {} };
   } catch (err) {
-    console.error("❌ getDailyStats error:", err.response?.data || err.message);
-    return { success: false, data: [] };
+    console.error("❌ getDetail error:", err.response?.data || err.message);
+    return { success: false, data: {} };
   }
-},
-
-
-// ===================== GET MONTHLY STATS (Auto Bulan Ini) =====================
-getMonthlyStats: async () => {
-  try {
-    const today = new Date();
-    const endDate = today.toISOString().split("T")[0] + " 23:59:59";
-
-    const res = await apiClient.get("/cash-flows/stats/monthly", {
-      params: { end_date: endDate, total_data: 12 }, // tampil 12 bulan terakhir
-    });
-
-    const result = res.data?.data || {};
-    const inflow = result.stats_inflow || {};
-    const outflow = result.stats_outflow || {};
-    const cashflow = result.stats_cashflow || {};
-
-    const monthlyData = Object.keys(inflow).map((key) => ({
-      month: key,
-      total_inflow: inflow[key] || 0,
-      total_outflow: outflow[key] || 0,
-      total_cashflow: cashflow[key] || 0,
-    }));
-
-    // Urutkan berdasarkan bulan (MM-YYYY)
-    monthlyData.sort((a, b) => {
-      const [mA, yA] = a.month.split("-").map(Number);
-      const [mB, yB] = b.month.split("-").map(Number);
-      return new Date(yA, mA - 1) - new Date(yB, mB - 1);
-    });
-
-    console.log("📊 Monthly Stats (auto month):", monthlyData);
-    return { success: true, data: monthlyData };
-  } catch (err) {
-    console.error("❌ getMonthlyStats error:", err.response?.data || err.message);
-    return { success: false, data: [] };
-  }
-},
-
+}
 
 };

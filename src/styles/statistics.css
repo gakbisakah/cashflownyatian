@@ -1,6 +1,5 @@
 /* ================================================
-   STATISTICS PAGE - MODERN WHITE DESIGN
-   Inspired by: Notion, Linear, Stripe Dashboard
+   STATISTICS PAGE - MODERN WHITE DESIGN WITH TABLES
    ================================================ */
 
 .statistics-page {
@@ -269,7 +268,6 @@
   background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
   transform: translateY(-2px);
   box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
-  color: #ffffff;
 }
 
 .btn-export:active:not(:disabled) {
@@ -294,105 +292,150 @@
   border-radius: 16px;
   overflow: hidden;
   min-height: 200px;
-  max-height: 700px;
-  display: flex;
-  flex-direction: column;
 }
 
 /* ================================================
-   STATS GRID WITH SCROLL
+   TABLE STYLES
    ================================================ */
 
-.stats-grid-scrollable {
-  position: relative;
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.25rem;
-  padding: 1.5rem;
+.table-responsive {
+  max-height: 600px;
   overflow-y: auto;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-  flex: 1;
+  overflow-x: auto;
 }
 
-/* Custom Scrollbar */
-.stats-grid::-webkit-scrollbar {
+.table-responsive::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
-.stats-grid::-webkit-scrollbar-track {
+.table-responsive::-webkit-scrollbar-track {
   background: #f1f5f9;
   border-radius: 10px;
-  margin: 8px 0;
 }
 
-.stats-grid::-webkit-scrollbar-thumb {
+.table-responsive::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #6366f1 0%, #8b5cf6 100%);
   border-radius: 10px;
-  transition: background 0.3s;
   border: 2px solid #f1f5f9;
 }
 
-.stats-grid::-webkit-scrollbar-thumb:hover {
+.table-responsive::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #4f46e5 0%, #7c3aed 100%);
 }
 
-/* Firefox Scrollbar */
-.stats-grid {
-  scrollbar-width: thin;
-  scrollbar-color: #6366f1 #f1f5f9;
-}
-
-/* Scroll Indicator */
-.scroll-indicator {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.98) 70%, rgba(255, 255, 255, 0.95) 85%, transparent);
-  padding: 1.25rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  color: #6366f1;
-  font-size: 0.875rem;
-  font-weight: 600;
-  pointer-events: none;
-  animation: fadeInOut 3s infinite;
-  z-index: 5;
-  border-top: 1px solid rgba(226, 232, 240, 0.5);
+.stats-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
   margin: 0;
 }
 
-.scroll-indicator i {
-  font-size: 1.25rem;
-  animation: bounceArrow 2s infinite;
+.stats-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #f8fafc;
 }
 
-@keyframes fadeInOut {
-  0%, 100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
+.stats-table thead tr {
+  border-bottom: 2px solid #e2e8f0;
 }
 
-@keyframes bounceArrow {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(4px);
-  }
+.stats-table th {
+  padding: 1rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.stats-table th i {
+  color: #6366f1;
+  font-size: 0.875rem;
+}
+
+.stats-table tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: all 0.2s;
+}
+
+.stats-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.stats-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.stats-table td {
+  padding: 1rem 1.25rem;
+  font-size: 0.9375rem;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.date-cell {
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.date-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  background: #f1f5f9;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.amount-cell {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.balance-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.875rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.balance-badge.positive {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.balance-badge.negative {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.count-cell {
+  font-weight: 500;
+}
+
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 0.625rem;
+  background: #ede9fe;
+  color: #6366f1;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
 }
 
 /* ================================================
@@ -448,272 +491,6 @@
 }
 
 /* ================================================
-   STATS GRID WITH SCROLL
-   ================================================ */
-
-.stats-grid-scrollable {
-  position: relative;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.25rem;
-  max-height: 680px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 8px;
-  scroll-behavior: smooth;
-}
-
-/* Custom Scrollbar */
-.stats-grid::-webkit-scrollbar {
-  width: 8px;
-}
-
-.stats-grid::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 10px;
-}
-
-.stats-grid::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #6366f1 0%, #8b5cf6 100%);
-  border-radius: 10px;
-  transition: background 0.3s;
-}
-
-.stats-grid::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #4f46e5 0%, #7c3aed 100%);
-}
-
-/* Firefox Scrollbar */
-.stats-grid {
-  scrollbar-width: thin;
-  scrollbar-color: #6366f1 #f1f5f9;
-}
-
-/* Scroll Indicator */
-.scroll-indicator {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.98) 60%, transparent);
-  padding: 1.5rem 1rem 1rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  color: #6366f1;
-  font-size: 0.875rem;
-  font-weight: 600;
-  pointer-events: none;
-  animation: bounce 2s infinite;
-  margin-top: -3rem;
-  z-index: 10;
-}
-
-.scroll-indicator i {
-  font-size: 1.25rem;
-  animation: bounceArrow 2s infinite;
-}
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-@keyframes bounceArrow {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(3px);
-  }
-}
-
-/* Hide scroll indicator when scrolled to bottom */
-.stats-grid-scrollable:has(.stats-grid::-webkit-scrollbar-thumb:active) .scroll-indicator {
-  opacity: 0;
-}
-
-/* ================================================
-   STAT CARD
-   ================================================ */
-
-.stat-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-.stat-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #6366f1, #8b5cf6);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s;
-}
-
-.stat-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-}
-
-.stat-card:hover::after {
-  transform: scaleX(1);
-}
-
-.stat-card-header {
-  padding: 1.25rem;
-  background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.stat-date {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: #0f172a;
-  display: flex;
-  align-items: center;
-}
-
-.stat-date i {
-  color: #6366f1;
-  font-size: 1rem;
-}
-
-.stat-badges {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.badge-count {
-  background: #f1f5f9;
-  color: #475569;
-  padding: 0.25rem 0.625rem;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-}
-
-.badge-amount {
-  padding: 0.25rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.badge-positive {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.badge-negative {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.stat-card-body {
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-/* ================================================
-   PROGRESS GROUP
-   ================================================ */
-
-.progress-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.progress-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.875rem;
-}
-
-.progress-label {
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-}
-
-.progress-value {
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.progress-bar-container {
-  height: 8px;
-  background: #f1f5f9;
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  border-radius: 10px;
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.progress-bar-fill::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  animation: shimmer 2s infinite;
-}
-
-.progress-bar-success {
-  background: linear-gradient(90deg, #10b981, #34d399);
-}
-
-.progress-bar-danger {
-  background: linear-gradient(90deg, #ef4444, #f87171);
-}
-
-/* ================================================
    ANIMATIONS
    ================================================ */
 
@@ -736,15 +513,6 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
   }
 }
 
@@ -778,16 +546,18 @@
     font-size: 1.375rem;
   }
 
-  .stats-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  .table-responsive {
+    max-height: 550px;
   }
 
-  .section-content {
-    max-height: 650px;
-  }
-
-  .scroll-indicator {
+  .stats-table th {
+    padding: 0.875rem 1rem;
     font-size: 0.8125rem;
+  }
+
+  .stats-table td {
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
   }
 }
 
@@ -879,67 +649,46 @@
   /* Section Content Mobile */
   .section-content {
     border-radius: 12px;
-    max-height: 600px;
   }
 
-  /* Stats Grid Mobile */
-  .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    padding: 1.25rem;
+  /* Table Mobile */
+  .table-responsive {
+    max-height: 500px;
   }
 
-  .stats-grid::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .scroll-indicator {
-    padding: 1rem 0.75rem;
+  .stats-table {
     font-size: 0.8125rem;
   }
 
-  .scroll-indicator i {
-    font-size: 1.125rem;
+  .stats-table th {
+    padding: 0.75rem 0.75rem;
+    font-size: 0.75rem;
   }
 
-  /* Stat Card Mobile */
-  .stat-card {
-    border-radius: 10px;
+  .stats-table th i {
+    display: none;
   }
 
-  .stat-card-header {
-    padding: 1rem;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
+  .stats-table td {
+    padding: 0.75rem 0.75rem;
+    font-size: 0.8125rem;
   }
 
-  .stat-date {
-    font-size: 0.875rem;
-  }
-
-  .stat-badges {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .badge-count,
-  .badge-amount {
-    font-size: 0.6875rem;
+  .date-badge {
     padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
   }
 
-  .stat-card-body {
-    padding: 1rem;
-    gap: 1rem;
-  }
-
-  .progress-info {
+  .balance-badge {
+    padding: 0.25rem 0.625rem;
     font-size: 0.8125rem;
   }
 
-  .progress-bar-container {
-    height: 6px;
+  .count-badge {
+    min-width: 28px;
+    height: 28px;
+    padding: 0 0.5rem;
+    font-size: 0.75rem;
   }
 
   /* Loading & Empty State Mobile */
@@ -993,13 +742,28 @@
     font-size: 1.125rem;
   }
 
-  .stat-date {
-    font-size: 0.8125rem;
+  .stats-table th {
+    padding: 0.625rem 0.5rem;
+    font-size: 0.6875rem;
   }
 
-  .badge-count,
-  .badge-amount {
-    font-size: 0.625rem;
+  .stats-table td {
+    padding: 0.625rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .date-badge {
+    font-size: 0.6875rem;
+  }
+
+  .balance-badge {
+    font-size: 0.75rem;
+  }
+
+  .count-badge {
+    min-width: 24px;
+    height: 24px;
+    font-size: 0.6875rem;
   }
 }
 
@@ -1016,25 +780,8 @@
     padding: 0.75rem 0 1rem 0;
   }
 
-  .section-content {
+  .table-responsive {
     max-height: 350px;
-  }
-
-  .stats-grid {
-    padding: 1rem;
-  }
-
-  .stats-grid::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  .scroll-indicator {
-    padding: 0.75rem;
-    font-size: 0.75rem;
-  }
-
-  .scroll-indicator i {
-    font-size: 1rem;
   }
 }
 
@@ -1049,9 +796,10 @@
   outline-offset: 2px;
 }
 
-.stat-card:focus-within {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+.stats-table tbody tr:focus-within {
+  background: #f1f5f9;
+  outline: 2px solid #6366f1;
+  outline-offset: -2px;
 }
 
 /* Reduce motion for users who prefer it */
@@ -1075,8 +823,7 @@
   }
 
   .metric-card,
-  .section-content,
-  .stat-card {
+  .section-content {
     box-shadow: none;
     border: 1px solid #e2e8f0;
     page-break-inside: avoid;
@@ -1088,8 +835,8 @@
     display: none;
   }
 
-  .stat-card {
-    margin-bottom: 1rem;
+  .stats-table tbody tr:hover {
+    background: transparent;
   }
 }
 
@@ -1102,41 +849,7 @@
     transform: scale(1.1) rotate(5deg);
   }
 
-  .stat-card:hover {
-    transform: translateY(-2px);
+  .stats-table tbody tr:hover {
+    background: #f8fafc;
   }
-}
-
-/* ================================================
-   DARK MODE SUPPORT (Optional)
-   ================================================ */
-
-@media (prefers-color-scheme: dark) {
-  /* Uncomment if dark mode needed in future */
-  /*
-  .statistics-page {
-    background: #0f172a;
-  }
-  
-  .metric-card,
-  .section-content,
-  .stat-card {
-    background: #1e293b;
-    border-color: #334155;
-  }
-  
-  .stats-hero-title,
-  .section-title,
-  .stat-date,
-  .metric-value,
-  .progress-value {
-    color: #f8fafc;
-  }
-  
-  .stats-hero-subtitle,
-  .section-subtitle,
-  .metric-label {
-    color: #94a3b8;
-  }
-  */
 }

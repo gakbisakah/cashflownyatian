@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import { cashflowService } from '../services/cashflow';
 import '../styles/statistics.css';
+import { BarChart3 } from "lucide-react";
 
 const Statistics = () => {
   const [dailyStats, setDailyStats] = useState([]);
@@ -33,23 +34,23 @@ const Statistics = () => {
       const [dailyRes, monthlyRes, allCashFlowsRes] = await Promise.all([
         cashflowService.getDailyStats({
           end_date: filters.dailyEndDate + ' 23:59:59',
-          total_data: filters.dailyTotalData,
+          total_data: Number(filters.dailyTotalData),
         }),
         cashflowService.getMonthlyStats({
           end_date: filters.monthlyEndDate + ' 23:59:59',
-          total_data: filters.monthlyTotalData,
+          total_data: Number(filters.monthlyTotalData),
         }),
         cashflowService.getAll(),
       ]);
 
       if (dailyRes && dailyRes.success) {
-        setDailyStats(Array.isArray(dailyRes.data) ? dailyRes.data : []);
+        setDailyStats(dailyRes.data.filter(d => !isNaN(new Date(d.date).getTime())));
       } else {
         setDailyStats([]);
       }
 
       if (monthlyRes && monthlyRes.success) {
-        setMonthlyStats(Array.isArray(monthlyRes.data) ? monthlyRes.data : []);
+        setMonthlyStats(monthlyRes.data);
       } else {
         setMonthlyStats([]);
       }
@@ -107,33 +108,34 @@ const Statistics = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('id-ID', {
+    const [day, month, year] = dateString.split('-');
+    return new Date(year, month - 1, day).toLocaleDateString('id-ID', {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
     });
   };
 
-  const getMaxValue = (stats) => {
-    if (!Array.isArray(stats) || stats.length === 0) return 0;
-    return Math.max(...stats.map((stat) => Math.max(stat.total_inflow || 0, stat.total_outflow || 0)));
+  const formatMonth = (monthString) => {
+    const [month, year] = monthString.split('-');
+    return new Date(year, month - 1).toLocaleDateString('id-ID', {
+      month: 'long',
+      year: 'numeric',
+    });
   };
 
-  const getPercentage = (value, maxValue) => {
-    return maxValue > 0 ? (value / maxValue) * 100 : 0;
-  };
-
-  const exportToCSV = (data, filename) => {
+  const exportToCSV = (data, filename, type = 'daily') => {
     if (!data || data.length === 0) {
       alert('Tidak ada data untuk diekspor');
       return;
     }
 
-    const headers = ['Tanggal/Bulan', 'Total Pemasukan', 'Total Pengeluaran', 'Total Transaksi'];
+    const headers = ['Periode', 'Pemasukan', 'Pengeluaran', 'Saldo', 'Total Transaksi'];
     const rows = data.map(stat => [
-      stat.date ? formatDate(stat.date) : new Date(stat.month).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }),
+      type === 'daily' ? formatDate(stat.date) : formatMonth(stat.month),
       stat.total_inflow || 0,
       stat.total_outflow || 0,
+      (stat.total_inflow || 0) - (stat.total_outflow || 0),
       stat.total_transactions || 0
     ]);
 
@@ -163,7 +165,10 @@ const Statistics = () => {
           <div className="stats-hero">
             <div className="row align-items-center">
               <div className="col">
-                <h1 className="stats-hero-title">Statistik Keuangan</h1>
+                <h1 className="stats-hero-title d-flex align-items-center gap-2">
+                  <BarChart3 color="#0d6efd" size={32} strokeWidth={2.5} />
+                  Statistik Keuangan
+                </h1>
                 <p className="stats-hero-subtitle">Monitor dan analisis performa keuangan Anda secara real-time</p>
               </div>
             </div>
@@ -240,7 +245,7 @@ const Statistics = () => {
             </div>
           </div>
 
-          {/* Daily Statistics */}
+          {/* Daily Statistics Table */}
           <div className="data-section">
             <div className="section-header">
               <div className="section-title-group">
@@ -274,7 +279,7 @@ const Statistics = () => {
                 </div>
                 <button 
                   className="btn btn-export"
-                  onClick={() => exportToCSV(dailyStats, 'statistik-harian.csv')}
+                  onClick={() => exportToCSV(dailyStats, 'statistik-harian.csv', 'daily')}
                   disabled={dailyStats.length === 0}
                 >
                   <i className="bi bi-download me-2"></i>
@@ -301,73 +306,50 @@ const Statistics = () => {
                   <p className="empty-text">Mulai tambahkan transaksi untuk melihat statistik harian</p>
                 </div>
               ) : (
-                <div className="stats-grid">
-                  {dailyStats.map((stat, index) => {
-                    const maxValue = getMaxValue(dailyStats);
-                    const inflowPercent = getPercentage(stat.total_inflow || 0, maxValue);
-                    const outflowPercent = getPercentage(stat.total_outflow || 0, maxValue);
-                    const balance = (stat.total_inflow || 0) - (stat.total_outflow || 0);
-
-                    return (
-                      <div key={index} className="stat-card">
-                        <div className="stat-card-header">
-                          <div className="stat-date">
-                            <i className="bi bi-calendar3 me-2"></i>
-                            {formatDate(stat.date)}
-                          </div>
-                          <div className="stat-badges">
-                            <span className="badge-count">
-                              <i className="bi bi-receipt me-1"></i>
-                              {stat.total_transactions || 0}
-                            </span>
-                            <span className={`badge-amount ${balance >= 0 ? 'badge-positive' : 'badge-negative'}`}>
-                              {formatCurrency(balance)}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="stat-card-body">
-                          <div className="progress-group">
-                            <div className="progress-info">
-                              <span className="progress-label text-success">
-                                <i className="bi bi-arrow-down me-1"></i>
-                                Pemasukan
+                <div className="table-responsive">
+                  <table className="stats-table">
+                    <thead>
+                      <tr>
+                        <th><i className="bi bi-calendar3 me-2"></i>Tanggal</th>
+                        <th className="text-end"><i className="bi bi-arrow-down me-2"></i>Pemasukan</th>
+                        <th className="text-end"><i className="bi bi-arrow-up me-2"></i>Pengeluaran</th>
+                        <th className="text-end"><i className="bi bi-wallet2 me-2"></i>Saldo</th>
+                        <th className="text-center"><i className="bi bi-receipt me-2"></i>Transaksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {dailyStats.map((stat, index) => {
+                        const balance = (stat.total_inflow || 0) - (stat.total_outflow || 0);
+                        return (
+                          <tr key={index}>
+                            <td className="date-cell">
+                              <span className="date-badge">{formatDate(stat.date)}</span>
+                            </td>
+                            <td className="text-end amount-cell text-success">
+                              {formatCurrency(stat.total_inflow || 0)}
+                            </td>
+                            <td className="text-end amount-cell text-danger">
+                              {formatCurrency(stat.total_outflow || 0)}
+                            </td>
+                            <td className="text-end amount-cell">
+                              <span className={`balance-badge ${balance >= 0 ? 'positive' : 'negative'}`}>
+                                {formatCurrency(balance)}
                               </span>
-                              <span className="progress-value">{formatCurrency(stat.total_inflow || 0)}</span>
-                            </div>
-                            <div className="progress-bar-container">
-                              <div 
-                                className="progress-bar-fill progress-bar-success"
-                                style={{ width: `${inflowPercent}%` }}
-                              ></div>
-                            </div>
-                          </div>
-
-                          <div className="progress-group">
-                            <div className="progress-info">
-                              <span className="progress-label text-danger">
-                                <i className="bi bi-arrow-up me-1"></i>
-                                Pengeluaran
-                              </span>
-                              <span className="progress-value">{formatCurrency(stat.total_outflow || 0)}</span>
-                            </div>
-                            <div className="progress-bar-container">
-                              <div 
-                                className="progress-bar-fill progress-bar-danger"
-                                style={{ width: `${outflowPercent}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                            </td>
+                            <td className="text-center count-cell">
+                              <span className="count-badge">{stat.total_transactions || 0}</span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Monthly Statistics */}
+          {/* Monthly Statistics Table */}
           <div className="data-section">
             <div className="section-header">
               <div className="section-title-group">
@@ -401,7 +383,7 @@ const Statistics = () => {
                 </div>
                 <button 
                   className="btn btn-export"
-                  onClick={() => exportToCSV(monthlyStats, 'statistik-bulanan.csv')}
+                  onClick={() => exportToCSV(monthlyStats, 'statistik-bulanan.csv', 'monthly')}
                   disabled={monthlyStats.length === 0}
                 >
                   <i className="bi bi-download me-2"></i>
@@ -428,70 +410,44 @@ const Statistics = () => {
                   <p className="empty-text">Mulai tambahkan transaksi untuk melihat statistik bulanan</p>
                 </div>
               ) : (
-                <div className="stats-grid">
-                  {monthlyStats.map((stat, index) => {
-                    const maxValue = getMaxValue(monthlyStats);
-                    const inflowPercent = getPercentage(stat.total_inflow || 0, maxValue);
-                    const outflowPercent = getPercentage(stat.total_outflow || 0, maxValue);
-                    const balance = (stat.total_inflow || 0) - (stat.total_outflow || 0);
-
-                    return (
-                      <div key={index} className="stat-card">
-                        <div className="stat-card-header">
-                          <div className="stat-date">
-                            <i className="bi bi-calendar-range me-2"></i>
-                            {new Date(stat.month).toLocaleDateString('id-ID', {
-                              month: 'long',
-                              year: 'numeric',
-                            })}
-                          </div>
-                          <div className="stat-badges">
-                            <span className="badge-count">
-                              <i className="bi bi-receipt me-1"></i>
-                              {stat.total_transactions || 0}
-                            </span>
-                            <span className={`badge-amount ${balance >= 0 ? 'badge-positive' : 'badge-negative'}`}>
-                              {formatCurrency(balance)}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="stat-card-body">
-                          <div className="progress-group">
-                            <div className="progress-info">
-                              <span className="progress-label text-success">
-                                <i className="bi bi-arrow-down me-1"></i>
-                                Pemasukan
+                <div className="table-responsive">
+                  <table className="stats-table">
+                    <thead>
+                      <tr>
+                        <th><i className="bi bi-calendar-range me-2"></i>Bulan</th>
+                        <th className="text-end"><i className="bi bi-arrow-down me-2"></i>Pemasukan</th>
+                        <th className="text-end"><i className="bi bi-arrow-up me-2"></i>Pengeluaran</th>
+                        <th className="text-end"><i className="bi bi-wallet2 me-2"></i>Saldo</th>
+                        <th className="text-center"><i className="bi bi-receipt me-2"></i>Transaksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {monthlyStats.map((stat, index) => {
+                        const balance = (stat.total_inflow || 0) - (stat.total_outflow || 0);
+                        return (
+                          <tr key={index}>
+                            <td className="date-cell">
+                              <span className="date-badge">{formatMonth(stat.month)}</span>
+                            </td>
+                            <td className="text-end amount-cell text-success">
+                              {formatCurrency(stat.total_inflow || 0)}
+                            </td>
+                            <td className="text-end amount-cell text-danger">
+                              {formatCurrency(stat.total_outflow || 0)}
+                            </td>
+                            <td className="text-end amount-cell">
+                              <span className={`balance-badge ${balance >= 0 ? 'positive' : 'negative'}`}>
+                                {formatCurrency(balance)}
                               </span>
-                              <span className="progress-value">{formatCurrency(stat.total_inflow || 0)}</span>
-                            </div>
-                            <div className="progress-bar-container">
-                              <div 
-                                className="progress-bar-fill progress-bar-success"
-                                style={{ width: `${inflowPercent}%` }}
-                              ></div>
-                            </div>
-                          </div>
-
-                          <div className="progress-group">
-                            <div className="progress-info">
-                              <span className="progress-label text-danger">
-                                <i className="bi bi-arrow-up me-1"></i>
-                                Pengeluaran
-                              </span>
-                              <span className="progress-value">{formatCurrency(stat.total_outflow || 0)}</span>
-                            </div>
-                            <div className="progress-bar-container">
-                              <div 
-                                className="progress-bar-fill progress-bar-danger"
-                                style={{ width: `${outflowPercent}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                            </td>
+                            <td className="text-center count-cell">
+                              <span className="count-badge">{stat.total_transactions || 0}</span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </div>

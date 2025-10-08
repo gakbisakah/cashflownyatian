@@ -1,7 +1,13 @@
 import React from "react";
 
 const CashFlowCard = ({ data = {}, onEdit, onDelete, onView, showActions = true }) => {
-  if (!data || Object.keys(data).length === 0) return null;
+  if (!data) {
+    return (
+      <div className="card shadow-sm p-3 bg-white">
+        <p className="text-muted mb-0 text-center">Data tidak tersedia</p>
+      </div>
+    );
+  }
 
   const formatCurrency = (amount) =>
     new Intl.NumberFormat("id-ID", {
@@ -49,7 +55,7 @@ const CashFlowCard = ({ data = {}, onEdit, onDelete, onView, showActions = true 
 
   return (
     <div
-      className={`card cashflow-card shadow-sm h-100 ${
+      className={`card cashflow-card shadow-sm h-100 bg-white ${
         data.type === "inflow" ? "border-success" : "border-danger"
       }`}
     >
@@ -114,13 +120,12 @@ const CashFlowCard = ({ data = {}, onEdit, onDelete, onView, showActions = true 
         </p>
       </div>
 
-      {/* 🔹 Hanya tampilkan tombol aksi jika showActions = true */}
       {showActions && (
         <div className="card-footer bg-transparent">
           <div className="btn-group w-100" role="group">
             <button
               className="btn btn-sm btn-outline-primary"
-              onClick={() => onView(data)}
+              onClick={() => data && onView(data)}
               title="Lihat Detail"
             >
               <i className="bi bi-eye"></i>

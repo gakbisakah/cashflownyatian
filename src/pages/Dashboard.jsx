@@ -415,9 +415,9 @@ const Dashboard = () => {
                           ))
                       ) : (
                       <div className="empty-state col-12">
-                          <i className="bi bi-cash-stack empty-icon"></i>
+                         
                           <h3 className="empty-title">Belum ada transaksi</h3>
-                          <p className="empty-text">Filter saat ini tidak menemukan data.</p>
+                         
                       </div>
                       )}
                   </div>

@@ -380,6 +380,43 @@
    EMPTY & LOADING STATES
    ================================================ */
 
+/* Agar teks dalam modal bisa di-select dan di-copy */
+.copyable-container {
+  user-select: text !important;
+  pointer-events: auto !important;
+  cursor: text;
+}
+
+/* Tambahan styling agar rapi saat diseleksi */
+.copyable-container .detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.copyable-container .detail-label {
+  font-weight: 600;
+  color: #475569;
+}
+
+.copyable-container .detail-value {
+  color: #0f172a;
+  word-break: break-word;
+  text-align: right;
+  max-width: 65%;
+}
+
+/* Hilangkan efek yang bikin tidak bisa klik */
+.modal-modern {
+  pointer-events: auto !important;
+}
+
+.modal-body {
+  user-select: text;
+  pointer-events: auto;
+}
+
 .empty-state, .loading-state {
   text-align: center;
   padding: 3rem 1rem;
@@ -403,6 +440,32 @@
   font-size: 0.9375rem;
   color: #64748b;
 }
+
+/* Agar semua teks dalam modal bisa diseleksi dan dicopy */
+.copyable-container {
+  user-select: text;
+  cursor: text;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #555;
+  flex: 0 0 100px;
+}
+
+.detail-value {
+  flex: 1;
+  text-align: right;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 
 /* ================================================
    MODAL DETAIL (CashFlowDetailModal)
@@ -470,6 +533,9 @@
     transform: translateY(0);
   }
 }
+
+
+
 
 @keyframes fadeIn {
   from {

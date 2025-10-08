@@ -5,14 +5,18 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
 import Statistics from './pages/Statistics';
+import Profile from './pages/Profile'; // ✅ Tambahkan import halaman profil
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Halaman Login & Register */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+        {/* Halaman Private */}
         <Route
           path="/dashboard"
           element={
@@ -37,6 +41,18 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        {/* ✅ Halaman Profil */}
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Redirect Default */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>

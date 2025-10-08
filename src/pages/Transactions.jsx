@@ -4,13 +4,22 @@ import CashFlowCard from '../components/CashFlowCard';
 import CashFlowModal from '../components/CashFlowModal';
 import { cashflowService } from '../services/cashflow';
 import '../styles/transactions.css';
+import { ArrowLeftRight } from "lucide-react";
 
 const CashFlowDetailModal = ({ show, onHide, data }) => {
   if (!show || !data) return null;
+
   const formatCurrency = (amount) =>
     new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount || 0);
+
   const formatDate = (dateString) =>
-    new Date(dateString).toLocaleString('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    new Date(dateString).toLocaleString('id-ID', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
 
   return (
     <div className="modal fade show d-block" tabIndex="-1" role="dialog" aria-modal="true">
@@ -23,7 +32,7 @@ const CashFlowDetailModal = ({ show, onHide, data }) => {
             </h5>
             <button type="button" className="btn-close btn-close-white" aria-label="Close" onClick={onHide}></button>
           </div>
-          <div className="modal-body">
+          <div className="modal-body copyable-container">
             <div className="detail-item">
               <span className="detail-label">Label</span>
               <span className="detail-value">{data.label}</span>
@@ -60,6 +69,8 @@ const CashFlowDetailModal = ({ show, onHide, data }) => {
     </div>
   );
 };
+
+
 
 const Transaction = () => {
   const [transactions, setTransactions] = useState([]);
@@ -195,21 +206,31 @@ const Transaction = () => {
     }
   };
 
-  const handleView = async (data) => {
-    try {
-      if (data && data.id) {
-        const res = await cashflowService.getDetail(data.id);
-        setDetailData(res.success ? res.data : data);
-      } else {
-        setDetailData(data);
-      }
-    } catch (err) {
-      console.error('detail error', err);
-      setDetailData(data);
-    } finally {
-      setShowDetail(true);
-    }
-  };
+const handleView = async (data) => {
+  try {
+    const res = await cashflowService.getDetail(data.id);
+    const apiData = res?.data?.cash_flow || data;
+
+    const mappedData = {
+      id: apiData.id,
+      label: apiData.label,
+      source: apiData.source,
+      nominal: apiData.nominal,
+      description: apiData.description,
+      created_at: apiData.created_at,
+      type: apiData.type
+    };
+
+    setDetailData(mappedData);
+  } catch (err) {
+    console.error("detail error", err);
+    setDetailData(data);
+  } finally {
+    setShowDetail(true);
+  }
+};
+
+
 
   const handleSubmit = async (formData) => {
     try {
@@ -263,7 +284,10 @@ const Transaction = () => {
           <div className="transaction-hero">
             <div className="row align-items-center justify-content-between">
               <div className="col-auto">
-                <h1 className="transaction-hero-title">Transaksi</h1>
+              <h1 className="transaction-hero-title flex items-center gap-2 text-3xl font-semibold">
+  <ArrowLeftRight className="text-blue-600 w-8 h-8" />
+  Transaksi
+</h1>
                 <p className="transaction-hero-subtitle">Kelola dan monitor semua transaksi keuangan Anda</p>
               </div>
               <div className="col-auto">
@@ -421,17 +445,11 @@ const Transaction = () => {
                 </div>
               ) : filteredTransactions.length === 0 ? (
                 <div className="empty-state">
-                  <div className="empty-icon">
-                    <i className="bi bi-inbox"></i>
-                  </div>
+                 
                   <h5 className="empty-title">
                     {transactions.length === 0 ? 'Belum ada transaksi' : 'Tidak ada transaksi yang sesuai filter'}
                   </h5>
-                  <p className="empty-text">
-                    {transactions.length === 0 
-                      ? 'Mulai tambahkan transaksi pertama Anda' 
-                      : 'Coba ubah filter atau reset untuk melihat semua transaksi'}
-                  </p>
+                 
                   <button className="btn btn-add-transaction mt-3" onClick={handleAdd}>
                     <i className="bi bi-plus-circle me-2"></i>
                     Tambah Transaksi

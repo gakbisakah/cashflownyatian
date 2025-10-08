@@ -66,10 +66,15 @@ const Navbar = () => {
           </ul>
           
           <div className="d-flex align-items-center">
-            <span className="text-white me-3">
-              <i className="bi bi-person-circle me-2"></i>
-              {user?.name || 'User'}
-            </span>
+            <Link
+  to="/profile"
+  className="text-white text-decoration-none me-3 d-flex align-items-center"
+  style={{ cursor: 'pointer' }}
+>
+  <i className="bi bi-person-circle me-2"></i>
+  {user?.name || 'User'}
+</Link>
+
             <button
               className="btn btn-outline-light btn-sm"
               onClick={handleLogout}
