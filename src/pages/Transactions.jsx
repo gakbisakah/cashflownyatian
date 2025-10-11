@@ -22,55 +22,55 @@ const CashFlowDetailModal = ({ show, onHide, data }) => {
     });
 
   return (
-    <div className="modal fade show d-block" tabIndex="-1" role="dialog" aria-modal="true">
-      <div className="modal-dialog modal-md modal-dialog-centered" role="document">
-        <div className="modal-content modal-modern">
-          <div className={`modal-header ${data.type === 'inflow' ? 'modal-header-success' : 'modal-header-danger'}`}>
-            <h5 className="modal-title">
-              <i className={`bi ${data.type === 'inflow' ? 'bi-arrow-down-circle' : 'bi-arrow-up-circle'} me-2`}></i>
-              {data.type === 'inflow' ? 'Detail Pemasukan' : 'Detail Pengeluaran'}
-            </h5>
-            <button type="button" className="btn-close btn-close-white" aria-label="Close" onClick={onHide}></button>
-          </div>
-          <div className="modal-body copyable-container">
-            <div className="detail-item">
-              <span className="detail-label">Label</span>
-              <span className="detail-value">{data.label}</span>
+    <>
+      <div className="modal-backdrop fade show" onClick={onHide}></div>
+      <div className="modal fade show d-block" tabIndex="-1" role="dialog" aria-modal="true" style={{ zIndex: 1055 }}>
+        <div className="modal-dialog modal-md modal-dialog-centered" role="document">
+          <div className="modal-content modal-modern">
+            <div className={`modal-header ${data.type === 'inflow' ? 'modal-header-success' : 'modal-header-danger'}`}>
+              <h5 className="modal-title">
+                <i className={`bi ${data.type === 'inflow' ? 'bi-arrow-down-circle' : 'bi-arrow-up-circle'} me-2`}></i>
+                {data.type === 'inflow' ? 'Detail Pemasukan' : 'Detail Pengeluaran'}
+              </h5>
+              <button type="button" className="btn-close btn-close-white" aria-label="Close" onClick={onHide}></button>
             </div>
-            <div className="detail-item">
-              <span className="detail-label">Sumber</span>
-              <span className="detail-value">{data.source}</span>
+            <div className="modal-body copyable-container">
+              <div className="detail-item">
+                <span className="detail-label">Label</span>
+                <span className="detail-value">{data.label}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Sumber</span>
+                <span className="detail-value">{data.source}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Nominal</span>
+                <span className={`detail-value fw-bold ${data.type === 'inflow' ? 'text-success' : 'text-danger'}`}>
+                  {formatCurrency(data.nominal)}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Deskripsi</span>
+                <span className="detail-value">{data.description || '-'}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Tanggal</span>
+                <span className="detail-value">{formatDate(data.created_at || data.date || new Date())}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">ID</span>
+                <span className="detail-value text-muted">{data.id}</span>
+              </div>
             </div>
-            <div className="detail-item">
-              <span className="detail-label">Nominal</span>
-              <span className={`detail-value fw-bold ${data.type === 'inflow' ? 'text-success' : 'text-danger'}`}>
-                {formatCurrency(data.nominal)}
-              </span>
+            <div className="modal-footer">
+              <button className="btn btn-secondary" onClick={onHide}>Tutup</button>
             </div>
-            <div className="detail-item">
-              <span className="detail-label">Deskripsi</span>
-              <span className="detail-value">{data.description || '-'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="detail-label">Tanggal</span>
-              <span className="detail-value">{formatDate(data.created_at || data.date || new Date())}</span>
-            </div>
-            <div className="detail-item">
-              <span className="detail-label">ID</span>
-              <span className="detail-value text-muted">{data.id}</span>
-            </div>
-          </div>
-          <div className="modal-footer">
-            <button className="btn btn-secondary" onClick={onHide}>Tutup</button>
           </div>
         </div>
       </div>
-      <div className="modal-backdrop fade show"></div>
-    </div>
+    </>
   );
 };
-
-
 
 const Transaction = () => {
   const [transactions, setTransactions] = useState([]);
@@ -206,31 +206,29 @@ const Transaction = () => {
     }
   };
 
-const handleView = async (data) => {
-  try {
-    const res = await cashflowService.getDetail(data.id);
-    const apiData = res?.data?.cash_flow || data;
+  const handleView = async (data) => {
+    try {
+      const res = await cashflowService.getDetail(data.id);
+      const apiData = res?.data?.cash_flow || data;
 
-    const mappedData = {
-      id: apiData.id,
-      label: apiData.label,
-      source: apiData.source,
-      nominal: apiData.nominal,
-      description: apiData.description,
-      created_at: apiData.created_at,
-      type: apiData.type
-    };
+      const mappedData = {
+        id: apiData.id,
+        label: apiData.label,
+        source: apiData.source,
+        nominal: apiData.nominal,
+        description: apiData.description,
+        created_at: apiData.created_at,
+        type: apiData.type
+      };
 
-    setDetailData(mappedData);
-  } catch (err) {
-    console.error("detail error", err);
-    setDetailData(data);
-  } finally {
-    setShowDetail(true);
-  }
-};
-
-
+      setDetailData(mappedData);
+    } catch (err) {
+      console.error("detail error", err);
+      setDetailData(data);
+    } finally {
+      setShowDetail(true);
+    }
+  };
 
   const handleSubmit = async (formData) => {
     try {
@@ -284,10 +282,10 @@ const handleView = async (data) => {
           <div className="transaction-hero">
             <div className="row align-items-center justify-content-between">
               <div className="col-auto">
-              <h1 className="transaction-hero-title flex items-center gap-2 text-3xl font-semibold">
-  <ArrowLeftRight className="text-blue-600 w-8 h-8" />
-  Transaksi
-</h1>
+                <h1 className="transaction-hero-title flex items-center gap-2 text-3xl font-semibold">
+                  <ArrowLeftRight className="text-blue-600 w-8 h-8" />
+                  Transaksi
+                </h1>
                 <p className="transaction-hero-subtitle">Kelola dan monitor semua transaksi keuangan Anda</p>
               </div>
               <div className="col-auto">
@@ -445,11 +443,9 @@ const handleView = async (data) => {
                 </div>
               ) : filteredTransactions.length === 0 ? (
                 <div className="empty-state">
-                 
                   <h5 className="empty-title">
                     {transactions.length === 0 ? 'Belum ada transaksi' : 'Tidak ada transaksi yang sesuai filter'}
                   </h5>
-                 
                   <button className="btn btn-add-transaction mt-3" onClick={handleAdd}>
                     <i className="bi bi-plus-circle me-2"></i>
                     Tambah Transaksi

@@ -348,22 +348,6 @@
   flex: 1;
 }
 
-.transaction-grid::-webkit-scrollbar {
-  width: 8px;
-}
-
-.transaction-grid::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 10px;
-  margin: 8px 0;
-}
-
-.transaction-grid::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #6366f1 0%, #8b5cf6 100%);
-  border-radius: 10px;
-  border: 2px solid #f1f5f9;
-}
-
 .transaction-grid::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #4f46e5 0%, #7c3aed 100%);
 }
@@ -379,43 +363,6 @@
 /* ================================================
    EMPTY & LOADING STATES
    ================================================ */
-
-/* Agar teks dalam modal bisa di-select dan di-copy */
-.copyable-container {
-  user-select: text !important;
-  pointer-events: auto !important;
-  cursor: text;
-}
-
-/* Tambahan styling agar rapi saat diseleksi */
-.copyable-container .detail-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px dashed #e2e8f0;
-}
-
-.copyable-container .detail-label {
-  font-weight: 600;
-  color: #475569;
-}
-
-.copyable-container .detail-value {
-  color: #0f172a;
-  word-break: break-word;
-  text-align: right;
-  max-width: 65%;
-}
-
-/* Hilangkan efek yang bikin tidak bisa klik */
-.modal-modern {
-  pointer-events: auto !important;
-}
-
-.modal-body {
-  user-select: text;
-  pointer-events: auto;
-}
 
 .empty-state, .loading-state {
   text-align: center;
@@ -441,42 +388,89 @@
   color: #64748b;
 }
 
-/* Agar semua teks dalam modal bisa diseleksi dan dicopy */
-.copyable-container {
-  user-select: text;
-  cursor: text;
+.loading-text {
+  margin-top: 1rem;
+  color: #64748b;
 }
-
-.detail-item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-}
-
-.detail-label {
-  font-weight: 600;
-  color: #555;
-  flex: 0 0 100px;
-}
-
-.detail-value {
-  flex: 1;
-  text-align: right;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
 
 /* ================================================
-   MODAL DETAIL (CashFlowDetailModal)
+   MODAL DETAIL (CashFlowDetailModal) - FIXED
    ================================================ */
+
+/* Backdrop positioning - behind modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+  backdrop-filter: blur(4px);
+}
+
+/* Modal container */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+  pointer-events: none;
+}
+
+.modal.show {
+  pointer-events: auto;
+}
+
+/* Modal dialog - clickable area */
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 1.75rem auto;
+  pointer-events: none;
+  max-width: 500px;
+}
+
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - 3.5rem);
+}
+
+/* Modal content - actual modal card */
+.modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: none;
+  outline: 0;
+}
 
 .modal-modern {
   border-radius: 16px;
   overflow: hidden;
-  border: none;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  animation: fadeIn 0.3s ease;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+/* Modal header */
+.modal-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: none;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
 }
 
 .modal-header-success {
@@ -489,23 +483,106 @@
   color: #fff;
 }
 
+.modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  line-height: 1.5;
+}
+
+/* Close button */
+.btn-close {
+  box-sizing: content-box;
+  width: 1em;
+  height: 1em;
+  padding: 0.25em;
+  color: #000;
+  background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+  border: 0;
+  border-radius: 0.25rem;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-close:hover {
+  opacity: 0.75;
+}
+
+.btn-close:focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25);
+  opacity: 1;
+}
+
+.btn-close-white {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Modal body */
+.modal-body {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 1.5rem;
+  background: #ffffff;
+}
+
+/* Copyable content styling */
+.copyable-container {
+  user-select: text !important;
+  cursor: text;
+}
+
 .detail-item {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 0;
-  border-bottom: 1px dashed #e5e7eb;
+  align-items: flex-start;
+  padding: 0.875rem 0;
+  border-bottom: 1px dashed #e2e8f0;
+  gap: 1rem;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
 }
 
 .detail-label {
   font-weight: 600;
   color: #475569;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  min-width: 100px;
 }
 
 .detail-value {
   color: #0f172a;
+  font-size: 0.9375rem;
   text-align: right;
-  max-width: 60%;
   word-break: break-word;
+  flex: 1;
+  user-select: text;
+}
+
+/* Modal footer */
+.modal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1rem 1.5rem;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e2e8f0;
+  border-bottom-right-radius: 16px;
+  border-bottom-left-radius: 16px;
+  gap: 0.5rem;
+}
+
+.modal-footer .btn {
+  margin: 0;
 }
 
 /* ================================================
@@ -534,9 +611,6 @@
   }
 }
 
-
-
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -545,3 +619,89 @@
     opacity: 1;
   }
 }
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ================================================
+   RESPONSIVE DESIGN
+   ================================================ */
+
+@media (max-width: 768px) {
+  .transaction-hero-title {
+    font-size: 1.5rem;
+  }
+
+  .transaction-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-dialog {
+    margin: 1rem;
+    max-width: calc(100% - 2rem);
+  }
+
+  .detail-item {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .detail-label {
+    min-width: auto;
+  }
+
+  .detail-value {
+    text-align: left;
+  }
+
+  .summary-metric-value {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .transaction-wrapper {
+    padding: 1rem 0 2rem 0;
+  }
+
+  .btn-add-transaction span {
+    display: none;
+  }
+
+  .filter-card-body {
+    padding: 1rem;
+  }
+
+  .summary-metric {
+    padding: 1rem;
+  }
+
+  .summary-metric-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+}:-webkit-scrollbar {
+  width: 8px;
+}
+
+.transaction-grid::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+  margin: 8px 0;
+}
+
+.transaction-grid::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 10px;
+  border: 2px solid #f1f5f9;
+}
+
